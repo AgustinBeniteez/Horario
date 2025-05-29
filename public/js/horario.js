@@ -45,6 +45,13 @@ function generateHours() {
 function getSubjectColor(subject) {
     if (!subject || subject.trim() === '') return '#f8f9fa';
     
+    // Verificar si hay un color personalizado guardado
+    const customColors = JSON.parse(localStorage.getItem('customSubjectColors') || '{}');
+    if (customColors[subject]) {
+        return customColors[subject];
+    }
+    
+    // Colores predeterminados
     const colors = [
         '#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7',
         '#DDA0DD', '#98D8C8', '#F7DC6F', '#BB8FCE', '#85C1E9',
@@ -389,28 +396,97 @@ function showContextMenu(event, day, hour, spanCount) {
         existingMenu.remove();
     }
     
-    // Solo mostrar opción de dividir si la celda está combinada
-    if (spanCount <= 1) return;
-    
     // Crear menú contextual
     const contextMenu = document.createElement('div');
     contextMenu.id = 'context-menu';
     contextMenu.className = 'context-menu';
-    contextMenu.style.position = 'fixed';
     contextMenu.style.left = event.clientX + 'px';
     contextMenu.style.top = event.clientY + 'px';
-    contextMenu.style.zIndex = '1000';
     
-    // Crear opción de dividir
-    const divideOption = document.createElement('div');
-    divideOption.className = 'context-menu-item';
-    divideOption.innerHTML = '<i class="fas fa-cut"></i> Dividir';
-    divideOption.addEventListener('click', () => {
-        divideCells(day, hour, spanCount);
-        contextMenu.remove();
-    });
+    // Ajustar posición para evitar que se salga de la pantalla
+    setTimeout(() => {
+        const rect = contextMenu.getBoundingClientRect();
+        if (rect.right > window.innerWidth) {
+            contextMenu.style.left = (window.innerWidth - rect.width - 10) + 'px';
+        }
+        if (rect.bottom > window.innerHeight) {
+            contextMenu.style.top = (window.innerHeight - rect.height - 10) + 'px';
+        }
+    }, 0);
     
-    contextMenu.appendChild(divideOption);
+    // Obtener el contenido actual de la celda
+    const currentSubject = localStorage.getItem(`schedule_${day}_${hour}`);
+    
+    // Crear título del menú (nombre de la asignatura)
+    if (currentSubject && currentSubject.trim() !== '') {
+        const menuTitle = document.createElement('div');
+        menuTitle.className = 'context-menu-item';
+        menuTitle.style.fontWeight = 'bold';
+        menuTitle.style.borderBottom = '1px solid var(--context-menu-border)';
+        menuTitle.innerHTML = `<i class="fas fa-book"></i> ${currentSubject}`;
+        contextMenu.appendChild(menuTitle);
+        
+        // Añadir separador
+        const divider = document.createElement('div');
+        divider.className = 'context-menu-divider';
+        contextMenu.appendChild(divider);
+        
+        // Opción para cambiar color (personalizado)
+        const colorOption = document.createElement('div');
+        colorOption.className = 'context-menu-item';
+        colorOption.innerHTML = '<i class="fas fa-palette"></i> Cambiar color';
+        
+        // Crear selector de color oculto
+        const colorPicker = document.createElement('input');
+        colorPicker.type = 'color';
+        colorPicker.style.position = 'absolute';
+        colorPicker.style.visibility = 'hidden';
+        colorPicker.value = getSubjectColor(currentSubject);
+        document.body.appendChild(colorPicker);
+        
+        colorOption.addEventListener('click', () => {
+            // Mostrar selector de color
+            colorPicker.click();
+        });
+        
+        colorPicker.addEventListener('change', () => {
+            // Guardar color personalizado
+            const customColors = JSON.parse(localStorage.getItem('customSubjectColors') || '{}');
+            customColors[currentSubject] = colorPicker.value;
+            localStorage.setItem('customSubjectColors', JSON.stringify(customColors));
+            
+            // Regenerar horario para aplicar cambios
+            generateSchedule();
+            contextMenu.remove();
+        });
+        
+        contextMenu.appendChild(colorOption);
+    }
+    
+    // Opción de dividir (solo si la celda está combinada)
+    if (spanCount > 1) {
+        // Si ya hay otras opciones, añadir separador
+        if (contextMenu.children.length > 0) {
+            const divider = document.createElement('div');
+            divider.className = 'context-menu-divider';
+            contextMenu.appendChild(divider);
+        }
+        
+        const divideOption = document.createElement('div');
+        divideOption.className = 'context-menu-item';
+        divideOption.innerHTML = '<i class="fas fa-cut"></i> Dividir';
+        divideOption.addEventListener('click', () => {
+            divideCells(day, hour, spanCount);
+            contextMenu.remove();
+        });
+        contextMenu.appendChild(divideOption);
+    }
+    
+    // Si no hay opciones disponibles, no mostrar el menú
+    if (contextMenu.children.length === 0) {
+        return;
+    }
+    
     document.body.appendChild(contextMenu);
     
     // Cerrar menú al hacer clic fuera

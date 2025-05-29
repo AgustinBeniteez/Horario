@@ -41,9 +41,16 @@
     --gradient-secondary: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%);
     --gradient-accent: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
     --gradient-success: linear-gradient(135deg, var(--success-color), var(--success-light));
+    --gradient-danger: linear-gradient(135deg, #ff6b6b, #ee5253);
     
     /* Color personalizable para encabezados de días */
     --day-header-bg: var(--gradient-primary);
+    
+    /* Menú contextual */
+    --context-menu-bg: var(--bg-secondary);
+    --context-menu-hover: #f0f4ff;
+    --context-menu-text: var(--text-primary);
+    --context-menu-border: var(--border-light);
 }
 
 /* Tema oscuro */
@@ -76,6 +83,12 @@
     --shadow-sm: 0 2px 5px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 4px 15px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.4);
+    
+    /* Menú contextual en modo oscuro */
+    --context-menu-bg: #2d2d2d;
+    --context-menu-hover: #3a3a3a;
+    --context-menu-text: #ffffff;
+    --context-menu-border: #444444;
 }
 
 /* Estilos generales */
@@ -197,7 +210,88 @@ body {
 }
 
 .menu-item {
-    margin-bottom: 25px;
+    margin-bottom: 25px;}
+
+/* Estilos para el menú contextual */
+.context-menu {
+    position: fixed;
+    background-color: var(--context-menu-bg);
+    border-radius: 8px;
+    box-shadow: var(--shadow-md);
+    min-width: 180px;
+    z-index: 1000;
+    overflow: hidden;
+    border: 1px solid var(--context-menu-border);
+    animation: contextMenuFadeIn 0.2s ease-out;
+    transform-origin: top left;
+}
+
+@keyframes contextMenuFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.context-menu-item {
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--context-menu-text);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-size: 0.95rem;
+    position: relative;
+    overflow: hidden;
+}
+
+.context-menu-item:hover {
+    background-color: var(--context-menu-hover);
+}
+
+.context-menu-item:active {
+    transform: scale(0.98);
+}
+
+.context-menu-item i {
+    font-size: 1rem;
+    color: var(--primary-color);
+    width: 20px;
+    text-align: center;
+}
+
+/* Efecto de ondas al hacer clic */
+.context-menu-item::after {
+    content: '';
+    position: absolute;
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    width: 100px;
+    height: 100px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    opacity: 0;
+    transition: transform 0.5s, opacity 0.5s;
+}
+
+.context-menu-item:active::after {
+    transform: translate(-50%, -50%) scale(2);
+    opacity: 0;
+    transition: 0s;
+}
+
+/* Separador para el menú contextual */
+.context-menu-divider {
+    height: 1px;
+    background-color: var(--context-menu-border);
+    margin: 5px 0;
+}
     padding-bottom: 20px;
     border-bottom: 1px solid var(--border-light);
     text-align: center;
