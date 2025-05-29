@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generador de Horarios - Mi Calendario Académico</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <!-- Partículas de fondo -->
+    <div class="particles-container">
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+        <div class="particle"></div>
+    </div>
+
+    <div class="schedule-app-container">
+        <!-- Header Moderno -->
+        <header class="schedule-header">
+            <div class="header-hero">
+                <div class="hero-icon">
+                    <i class="fas fa-calendar-week"></i>
+                </div>
+                <div class="hero-text">
+                    <h1 class="hero-title">
+                        <span class="title-main">Mi Horario</span>
+                        <span class="title-accent">Académico</span>
+                    </h1>
+                    <p class="hero-subtitle">Crea y personaliza tu horario de clases de manera intuitiva</p>
+                </div>
+                <div class="header-actions">
+                    <button id="export-btn" class="action-btn primary">
+                        <i class="fas fa-download"></i>
+                        <span>Exportar PNG</span>
+                    </button>
+                    <a href="index.html" class="action-btn secondary">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                    </a>
+                </div>
+            </div>
+        </header>
+        
+        <!-- Contenido Principal -->
+        <main class="main-content">
+            <div class="content-wrapper-lateral">
+                <!-- Panel Lateral de Configuración -->
+                <aside class="config-sidebar">
+
+                    <div class="sidebar-content">
+                        <!-- Configuración General -->
+                        <div class="config-card-sidebar">
+                            <div class="card-header-sidebar">
+                                <i class="fas fa-clock"></i>
+                                <h3>General</h3>
+                            </div>
+                            <div class="card-content-sidebar">
+                                <div class="input-group-sidebar">
+                                    <label for="start-hour">Hora de inicio:</label>
+                                    <select id="start-hour" class="modern-select-sidebar">
+                                        <option value="6">6:00 AM</option>
+                                        <option value="7">7:00 AM</option>
+                                        <option value="8">8:00 AM</option>
+                                        <option value="9">9:00 AM</option>
+                                    </select>
+                                </div>
+                                <div class="input-group-sidebar">
+                                    <label for="total-hours">Total de horas:</label>
+                                    <select id="total-hours" class="modern-select-sidebar">
+                                        <option value="8">8 horas</option>
+                                        <option value="9">9 horas</option>
+                                        <option value="10">10 horas</option>
+                                        <option value="11">11 horas</option>
+                                        <option value="12">12 horas</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Gestión de Recreos -->
+                        <div class="config-card-sidebar">
+                            <div class="card-header-sidebar">
+                                <i class="fas fa-coffee"></i>
+                                <h3>Recreos</h3>
+                            </div>
+                            <div class="card-content-sidebar">
+                                <div class="input-group-sidebar">
+                                    <label for="break-hour">Hora:</label>
+                                    <select id="break-hour" class="modern-select-sidebar"></select>
+                                </div>
+                                <div class="input-group-sidebar">
+                                    <label for="break-name">Nombre:</label>
+                                    <input type="text" id="break-name" class="modern-input-sidebar" placeholder="Recreo">
+                                </div>
+                                <button id="add-break-btn" class="add-btn-sidebar">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Agregar</span>
+                                </button>
+                                <div class="breaks-display-sidebar">
+                                    <div id="breaks-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="config-actions-sidebar">
+                            <button id="apply-config-btn" class="apply-btn-sidebar">
+                                <i class="fas fa-check"></i>
+                                <span>Aplicar</span>
+                            </button>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- Área Principal del Horario -->
+                <main class="schedule-main">
+                    <div class="schedule-wrapper-main">
+                        <div id="schedule-container"></div>
+                    </div>
+                </main>
+            </div>
+        </main>
+        
+
+    </div>
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="js/horario.js"></script>
+    <script src="js/theme-toggle.js"></script>
+    
+    <!-- Script para animaciones -->
+    <script>
+        // Animación de entrada para las tarjetas de configuración
+        document.addEventListener('DOMContentLoaded', function() {
+            const cards = document.querySelectorAll('.config-card');
+            cards.forEach((card, index) => {
+                card.style.opacity = '0';
+                card.style.transform = 'translateY(30px)';
+                
+                setTimeout(() => {
+                    card.style.transition = 'all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275)';
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 200);
+            });
+        });
+    </script>
+</body>
+</html>
