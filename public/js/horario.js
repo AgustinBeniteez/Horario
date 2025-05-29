@@ -1,5 +1,5 @@
 // Configuración del horario
-const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
 
 // Configuración por defecto
 let scheduleConfig = {
