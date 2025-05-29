@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generador de Horarios - Mi Calendario Académico</title>
+    <link rel="shortcut icon" href="img/horarioicon.webp" type="image/x-icon">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -65,23 +66,31 @@
                             </div>
                             <div class="card-content-sidebar">
                                 <div class="input-group-sidebar">
-                                    <label for="start-hour">Hora de inicio:</label>
-                                    <select id="start-hour" class="modern-select-sidebar">
-                                        <option value="6">6:00 AM</option>
-                                        <option value="7">7:00 AM</option>
-                                        <option value="8">8:00 AM</option>
-                                        <option value="9">9:00 AM</option>
-                                    </select>
+                                    <label for="total-rows">Número de filas:</label>
+                                    <input type="number" id="total-rows" class="modern-input-sidebar" min="1" max="20" value="8">
                                 </div>
                                 <div class="input-group-sidebar">
-                                    <label for="total-hours">Total de horas:</label>
-                                    <select id="total-hours" class="modern-select-sidebar">
-                                        <option value="8">8 horas</option>
-                                        <option value="9">9 horas</option>
-                                        <option value="10">10 horas</option>
-                                        <option value="11">11 horas</option>
-                                        <option value="12">12 horas</option>
-                                    </select>
+                                    <label for="day-header-color">Color de encabezados:</label>
+                                    <div class="color-picker-container">
+                                        <input type="color" id="day-header-color" class="color-picker-input" value="#667eea">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Horas Personalizadas -->
+                        <div class="config-card-sidebar">
+                            <div class="card-header-sidebar">
+                                <i class="fas fa-hourglass"></i>
+                                <h3>Horas Personalizadas</h3>
+                            </div>
+                            <div class="card-content-sidebar">
+                                <button id="add-hour-btn" class="add-btn-sidebar">
+                                    <i class="fas fa-plus"></i>
+                                    <span>Agregar Hora</span>
+                                </button>
+                                <div class="hours-display-sidebar">
+                                    <div id="custom-hours-list"></div>
                                 </div>
                             </div>
                         </div>
