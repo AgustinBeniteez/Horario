@@ -1,12 +1,15 @@
 // Configuración del horario
-const DAYS = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+const DAYS_DEFAULT = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes'];
+const DAYS_WEEKEND = ['Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado', 'Domingo'];
+let DAYS = DAYS_DEFAULT;
 
 // Configuración por defecto
 let scheduleConfig = {
     customHours: ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00'], // Array de horas personalizables
     totalRows: 8, // Número de filas en lugar de horas
     breaks: [], // Array de objetos {hour: '10:00', name: 'Recreo'}
-    dayHeaderColor: '#667eea' // Color de fondo para los encabezados de días
+    dayHeaderColor: '#667eea', // Color de fondo para los encabezados de días
+    showWeekend: false // Mostrar sábado y domingo
 };
 
 // Cargar configuración guardada
@@ -14,12 +17,21 @@ function loadConfig() {
     const saved = localStorage.getItem('scheduleConfig');
     if (saved) {
         scheduleConfig = JSON.parse(saved);
+        // Actualizar los días según la configuración
+        updateDaysArray();
     }
+}
+
+// Función para actualizar el array de días según la configuración
+function updateDaysArray() {
+    DAYS = scheduleConfig.showWeekend ? DAYS_WEEKEND : DAYS_DEFAULT;
 }
 
 // Guardar configuración
 function saveConfig() {
     localStorage.setItem('scheduleConfig', JSON.stringify(scheduleConfig));
+    // Actualizar los días según la configuración guardada
+    updateDaysArray();
 }
 
 // Generar array de horas basado en configuración
@@ -76,6 +88,11 @@ function generateSchedule() {
     // Crear la estructura del horario
     const scheduleGrid = document.createElement('div');
     scheduleGrid.className = 'schedule-grid';
+    
+    // Añadir clase si se muestran los días de fin de semana
+    if (scheduleConfig.showWeekend) {
+        scheduleGrid.classList.add('show-weekend');
+    }
     
     // Crear celda vacía para la esquina superior izquierda
     const emptyCell = document.createElement('div');
@@ -575,7 +592,11 @@ function applyConfig() {
     scheduleConfig.totalRows = totalRows;
     scheduleConfig.dayHeaderColor = dayHeaderColor;
     
+    // Actualizar configuración de días de fin de semana
+    scheduleConfig.showWeekend = document.getElementById('show-weekend').checked;
+    
     saveConfig();
+    updateDaysArray();
     generateSchedule();
     generateBreakHourOptions();
     
@@ -784,6 +805,9 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('day-header-color').value = scheduleConfig.dayHeaderColor;
     }
     
+    // Configurar el estado del checkbox de fin de semana
+    document.getElementById('show-weekend').checked = scheduleConfig.showWeekend || false;
+    
     // Migrar configuración antigua si existe
     if (scheduleConfig.startHour !== undefined && scheduleConfig.totalHours !== undefined) {
         const newCustomHours = [];
@@ -805,6 +829,14 @@ document.addEventListener('DOMContentLoaded', () => {
     document.getElementById('export-btn').addEventListener('click', exportToPNG);
     document.getElementById('apply-config-btn').addEventListener('click', applyConfig);
     document.getElementById('add-break-btn').addEventListener('click', addBreak);
+    
+    // Event listener para el checkbox de fin de semana
+    document.getElementById('show-weekend').addEventListener('change', function() {
+        scheduleConfig.showWeekend = this.checked;
+        saveConfig();
+        updateDaysArray();
+        generateSchedule();
+    });
     
     // Event listener para agregar hora personalizada
     const addHourBtn = document.getElementById('add-hour-btn');
